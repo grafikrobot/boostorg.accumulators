@@ -6,8 +6,6 @@ exe example
     :
         main.cpp
     :
-        <include>../../..
-        <include>$(BOOST_ROOT)
-        <library>/boost/serialization
+        <library>/boost/foreach//boost_foreach
         <cxxflags>"-Wno-deprecated-declarations"
     ;
