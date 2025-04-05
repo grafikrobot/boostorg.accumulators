@@ -30,8 +30,14 @@ jobs:
             mingw *
             clang-cl *
           standards: '>=11'
-          subrange-policy: |
-            msvc: one-per-minor
+          latest-factors: |
+            gcc Asan TSan UBSan
+            clang BoundsSan
+          factors: |
+            gcc Shared
+            msvc Shared x86
+            mingw Shared
+          subrange-policy: one-per-minor
           trace-commands: true
   build:
     needs: cpp-matrix
