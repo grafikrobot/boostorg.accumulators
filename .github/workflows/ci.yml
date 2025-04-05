@@ -8,9 +8,6 @@ on:
       - develop
       - feature/**
 
-env:
-  BOOST_LIBRARY: accumulators
-
 jobs:
   cpp-matrix:
     runs-on: ubuntu-latest
@@ -22,6 +19,8 @@ jobs:
         uses: alandefreitas/cpp-actions/cpp-matrix@master
         id: cpp-matrix
         with:
+          extra-values: |
+            boost-lib: accumulators
           compilers: |
             gcc >= 4.8
             clang >= 3.9
@@ -84,21 +83,21 @@ jobs:
           branch: ${{ (github.ref_name == 'master' && github.ref_name) || 'develop' }}
           boost-dir: ../boost-root
           scan-modules-dir: .
-          scan-modules-ignore: ${{ env.BOOST_LIBRARY }}
+          scan-modules-ignore: ${{ matrix.boost-lib }}
 
       - name: Copy Library
         shell: bash
         run: |
           workspace_root=$(echo "$GITHUB_WORKSPACE" | sed 's/\\/\//g')
           cd ../boost-root
-          mkdir "libs/$BOOST_LIBRARY"
-          cp -r "$workspace_root"/* "libs/$BOOST_LIBRARY"
+          mkdir "libs/${{ matrix.boost-lib }}"
+          cp -r "$workspace_root"/* "libs/${{ matrix.boost-lib }}"
 
       - name: B2 Workflow
         uses: alandefreitas/cpp-actions/b2-workflow@master
         with:
           source-dir: ${{ steps.boost-clone.outputs.boost-dir }}
-          modules: ${{ env.BOOST_LIBRARY }}
+          modules: ${{ matrix.boost-lib }}
           toolset: ${{ matrix.b2-toolset }}
           build-variant: ${{ matrix.build-type }}
           cxx: ${{ steps.setup-cpp.outputs.cxx || '' }}
