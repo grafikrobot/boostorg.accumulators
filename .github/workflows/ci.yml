@@ -21,6 +21,7 @@ jobs:
         with:
           extra-values: |
             boost-lib: accumulators
+            test-dirs: test
           compilers: |
             gcc >= 4.8
             clang >= 3.9
@@ -84,6 +85,7 @@ jobs:
           boost-dir: ../boost-root
           scan-modules-dir: .
           scan-modules-ignore: ${{ matrix.boost-lib }}
+          modules-scan-paths: ${{ matrix.test-dirs }}
 
       - name: Copy Library
         shell: bash
