@@ -156,8 +156,6 @@ jobs:
         shell: bash
 
     steps:
-      - uses: actions/checkout@v4
-
       - name: Setup container environment
         if: matrix.container
         run: |
@@ -170,6 +168,8 @@ jobs:
           curl -LO https://archives.boost.io/misc/node/node-v20.9.0-linux-x64-glibc-217.tar.xz
           tar -xf node-v20.9.0-linux-x64-glibc-217.tar.xz --strip-components 1 -C /node20217
           ldd /__e/node20/bin/node
+
+      - uses: actions/checkout@v4
 
       - name: Install packages
         if: matrix.install
