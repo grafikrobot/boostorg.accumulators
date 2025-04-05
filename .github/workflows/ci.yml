@@ -89,8 +89,10 @@ jobs:
       - name: Copy Library
         shell: bash
         run: |
-          cd ${{ steps.boost-clone.outputs.boost-dir }}
-          cp -r $GITHUB_WORKSPACE/* libs/$BOOST_LIBRARY
+          workspace_root=$(echo "$GITHUB_WORKSPACE" | sed 's/\\/\//g')
+          cd ../boost-root
+          mkdir "libs/$BOOST_LIBRARY"
+          cp -r "$workspace_root"/* "libs/$BOOST_LIBRARY"
 
       - name: B2 Workflow
         uses: alandefreitas/cpp-actions/b2-workflow@master
