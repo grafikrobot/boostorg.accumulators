@@ -8,6 +8,9 @@ on:
       - develop
       - feature/**
 
+env:
+  BOOST_LIBRARY: accumulators
+
 jobs:
   cpp-matrix:
     runs-on: ubuntu-latest
@@ -27,6 +30,8 @@ jobs:
             mingw *
             clang-cl *
           standards: '>=11'
+          subrange-policy: |
+            msvc: one-per-minor
           trace-commands: true
   build:
     needs: cpp-matrix
@@ -55,9 +60,6 @@ jobs:
           tar -xf node-v20.9.0-linux-x64-glibc-217.tar.xz --strip-components 1 -C /node20217
           ldd /__e/node20/bin/node
 
-      - name: Clone Library
-        uses: actions/checkout@v4
-
       - name: Setup C++ Compiler
         uses: alandefreitas/cpp-actions/setup-cpp@master
         id: setup-cpp
@@ -72,6 +74,9 @@ jobs:
         with:
           apt-get: ${{ matrix.install }}
 
+      - name: Clone Library
+        uses: actions/checkout@v4
+
       - name: Clone Boost
         uses: alandefreitas/cpp-actions/boost-clone@master
         id: boost-clone
@@ -79,13 +84,19 @@ jobs:
           branch: ${{ (github.ref_name == 'master' && github.ref_name) || 'develop' }}
           boost-dir: ../boost-root
           scan-modules-dir: .
-          scan-modules-ignore: accumulators
+          scan-modules-ignore: ${{ env.BOOST_LIBRARY }}
+
+      - name: Copy Library
+        shell: bash
+        run: |
+          cd ${{ steps.boost-clone.outputs.boost-dir }}
+          cp -r $GITHUB_WORKSPACE/* libs/$BOOST_LIBRARY
 
       - name: B2 Workflow
         uses: alandefreitas/cpp-actions/b2-workflow@master
         with:
           source-dir: ${{ steps.boost-clone.outputs.boost-dir }}
-          modules: accumulators
+          modules: ${{ env.BOOST_LIBRARY }}
           toolset: ${{ matrix.b2-toolset }}
           build-variant: ${{ matrix.build-type }}
           cxx: ${{ steps.setup-cpp.outputs.cxx || '' }}
