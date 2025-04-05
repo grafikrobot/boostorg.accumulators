@@ -93,7 +93,6 @@ jobs:
         run: |
           workspace_root=$(echo "$GITHUB_WORKSPACE" | sed 's/\\/\//g')
           cd ../boost-root
-          ls -d1 libs/*/include
           rm -rf "libs/${{ matrix.boost-lib }}"
           mkdir "libs/${{ matrix.boost-lib }}"
           cp -r "$workspace_root"/* "libs/${{ matrix.boost-lib }}"
