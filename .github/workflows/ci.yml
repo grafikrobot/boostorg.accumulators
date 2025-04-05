@@ -21,7 +21,7 @@ jobs:
         with:
           extra-values: |
             boost-lib: accumulators
-            test-dirs: test
+            scan-dirs: test
           compilers: |
             gcc >= 4.8
             clang >= 3.9
@@ -85,13 +85,14 @@ jobs:
           boost-dir: ../boost-root
           scan-modules-dir: .
           scan-modules-ignore: ${{ matrix.boost-lib }}
-          modules-scan-paths: ${{ matrix.test-dirs }}
+          modules-scan-paths: ${{ matrix.scan-dirs }}
 
       - name: Copy Library
         shell: bash
         run: |
           workspace_root=$(echo "$GITHUB_WORKSPACE" | sed 's/\\/\//g')
           cd ../boost-root
+          rm -rf "libs/${{ matrix.boost-lib }}"
           mkdir "libs/${{ matrix.boost-lib }}"
           cp -r "$workspace_root"/* "libs/${{ matrix.boost-lib }}"
 
