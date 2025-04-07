@@ -28,12 +28,11 @@ constant boost_dependencies :
     /boost/typeof//boost_typeof ;
 
 project /boost/accumulators
-    : common-requirements
-        <include>include
     ;
 
 explicit
-    [ alias boost_accumulators : : : : <library>$(boost_dependencies) ]
+    [ alias boost_accumulators : : :
+        : <include>include <library>$(boost_dependencies) ]
     [ alias all : boost_accumulators example test ]
     ;
 
