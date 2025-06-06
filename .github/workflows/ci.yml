@@ -52,9 +52,10 @@ jobs:
             container: ubuntu:20.04
             install: g++-10
           - toolset: gcc-11
+            compiler: g++-11
             cxxstd: "11,14,17,2a"
             os: ubuntu-latest
-            container: ubuntu:20.04
+            container: ubuntu:24.04
             install: g++-11
           - toolset: gcc-12
             cxxstd: "11,14,17,20,2b"
